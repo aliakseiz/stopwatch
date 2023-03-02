@@ -4,7 +4,7 @@ Simple stopwatch Gnome extension.
 
 Click primary button to start/pause the watch, secondary to reset it.
 
-![demo](https://cloud.githubusercontent.com/assets/25395/11857351/3407b46-a40c-11e5-8662-e99ab1cd2cb7.gif)
+![demo](https://raw.githubusercontent.com/aliakseiz/stopwatch/main/demo.gif)
 
 ---
 # License
