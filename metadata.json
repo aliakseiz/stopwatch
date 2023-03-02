@@ -1,0 +1,13 @@
+{
+  "description": "Simple extension to measure time. Primary button click starts/pauses the watch, secondary button resets it.",
+  "name": "Stopwatch",
+  "uuid": "stopwatch@aliakseiz.github.com",
+  "shell-version": [
+    "40",
+    "41",
+    "42",
+    "43"
+  ],
+  "url": "https://github.com/aliakseiz/stopwatch",
+  "version": 1
+}
