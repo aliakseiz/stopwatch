@@ -101,6 +101,14 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
     _updateLabel() {
         this._label.set_text(Misc.formatTime(this.timer.timePassed));
     }
+
+    destroy() {
+        if (this.timeout) {
+            MainLoop.source_remove(this.timeout);
+            this.timeout = null;
+        }
+        super.destroy();
+    }
 });
 
 class Extension {
