@@ -37,6 +37,7 @@ const MainLoop = imports.mainloop;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Misc = Me.imports.misc;
 const Timer = Me.imports.timer;
+var storage = 0; // keep the timer state between screen locks
 
 const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button {
     _init() {
@@ -44,8 +45,14 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
         this.timer = new Timer.Timer();
 
+        if (storage !== 0) {
+            this.timer.setTimePassed(storage);
+            this.timer.pause();
+        }
+
         this._label = new St.Label({
-            text: '0:00', y_align: Clutter.ActorAlign.CENTER, style_class: 'paused'
+            text: Misc.formatTime(this.timer.timePassed),
+            y_align: Clutter.ActorAlign.CENTER, style_class: 'paused'
         });
         this.add_child(this._label);
 
@@ -104,6 +111,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
     destroy() {
         if (this.timeout) {
+            storage = this.timer.timePassed;
             MainLoop.source_remove(this.timeout);
             this.timeout = null;
         }

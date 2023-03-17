@@ -24,17 +24,13 @@ var Timer = class Timer {
     }
 
     pause() {
-        if (this.state == TimerState.RUNNING) {
-            this.state = TimerState.PAUSED;
-            this.update();
-        }
+        this.state = TimerState.PAUSED;
+        this.update();
     }
 
     resume() {
-        if (this.state == TimerState.PAUSED) {
-            this.lastUpdate = new Date().getTime();
-            this.state = TimerState.RUNNING;
-        }
+        this.lastUpdate = new Date().getTime();
+        this.state = TimerState.RUNNING;
     }
 
     stop() {
@@ -54,5 +50,9 @@ var Timer = class Timer {
                 this.timePassed = 0;
             }
         }
+    }
+
+    setTimePassed(timePassed) {
+        this.timePassed = timePassed;
     }
 }
