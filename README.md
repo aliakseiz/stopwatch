@@ -4,7 +4,13 @@ Simple stopwatch Gnome extension.
 
 Click primary button to start/pause the watch, secondary to reset it.
 
+Automatically pauses when the screen is locked.
+
 ![demo](https://raw.githubusercontent.com/aliakseiz/stopwatch/main/demo.gif)
+
+# Install
+
+[Gnome shell extensions](https://extensions.gnome.org/extension/5796/stopwatch/)
 
 ---
 # License
