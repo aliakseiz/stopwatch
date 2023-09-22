@@ -28,15 +28,16 @@
  dbus-run-session -- gnome-shell --nested --wayland
 */
 
-const {Clutter, GObject, St} = imports.gi;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const MainLoop = imports.mainloop;
+import Clutter from 'gi://Clutter';
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-// https://gitlab.gnome.org/GNOME/gnome-shell/blob/main/js/misc/extensionUtils.js
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Misc = Me.imports.misc;
-const Timer = Me.imports.timer;
+import * as Misc from './misc.js';
+import * as Timer from './timer.js';
+
 var storage = 0; // keep the timer state between screen locks
 
 const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button {
@@ -72,7 +73,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
                 this._label.set_style_class_name('paused');
 
-                MainLoop.source_remove(this.timeout);
+                GLib.source_remove(this.timeout);
                 this.timeout = null;
 
                 break;
@@ -88,7 +89,10 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
                         this.timer.start();
                     }
 
-                    this.timeout = MainLoop.timeout_add(1000, () => {
+                    this.timeout = GLib.timeout_add_seconds(
+                    GLib.PRIORITY_DEFAULT,      // priority of the source
+                    1,                          // seconds to wait
+                    () => {                     // the callback to invoke
                         this.timer.update();
                         this._updateLabel();
 
@@ -112,14 +116,14 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
     destroy() {
         if (this.timeout) {
             storage = this.timer.timePassed;
-            MainLoop.source_remove(this.timeout);
+            GLib.source_remove(this.timeout);
             this.timeout = null;
         }
         super.destroy();
     }
 });
 
-class Extension {
+export default class Extension {
     constructor(uuid) {
         this._uuid = uuid;
     }

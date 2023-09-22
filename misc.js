@@ -3,7 +3,7 @@
  * @param {*} seconds
  * @returns the formatted time as a string
  */
-function formatTime(seconds) {
+export function formatTime(seconds) {
     let text = "";
 
     let secondsLeft = seconds;

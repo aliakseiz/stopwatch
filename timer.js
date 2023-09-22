@@ -2,7 +2,7 @@ const TimerState = {
     STOPPED: 'Stopped', PAUSED: 'Paused', RUNNING: 'Running',
 };
 
-var Timer = class Timer {
+export class Timer {
     constructor() {
         this.state = TimerState.STOPPED;
         this.lastUpdate = 0;

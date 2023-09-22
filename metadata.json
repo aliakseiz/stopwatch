@@ -3,12 +3,8 @@
   "name": "Stopwatch",
   "uuid": "stopwatch@aliakseiz.github.com",
   "shell-version": [
-    "40",
-    "41",
-    "42",
-    "43",
-    "44"
+    "45"
   ],
   "url": "https://github.com/aliakseiz/stopwatch",
-  "version": 4
+  "version": 5
 }
