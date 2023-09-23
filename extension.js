@@ -123,7 +123,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
     }
 });
 
-export default class Extension {
+export default class Stopwatch {
     constructor(uuid) {
         this._uuid = uuid;
     }
@@ -138,8 +138,4 @@ export default class Extension {
         this._indicator.destroy();
         this._indicator = null;
     }
-}
-
-function init(meta) {
-    return new Extension(meta.uuid);
 }
