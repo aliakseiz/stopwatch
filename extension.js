@@ -1,17 +1,17 @@
 /** extension.js
  * MIT License
  * Copyright © 2023 Aliaksei Zhuk
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 
@@ -73,8 +73,13 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
                 this._label.set_style_class_name('paused');
 
-                GLib.source_remove(this.timeout);
-                this.timeout = null;
+                // Ensure storage is updated to reflect the timer's stopped state.
+                storage = 0;
+
+						    if (this.timeout) {
+                  GLib.source_remove(this.timeout);
+                  this.timeout = null;
+                }
 
                 break;
             case 1: // right
