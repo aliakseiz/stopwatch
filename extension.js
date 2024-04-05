@@ -47,12 +47,12 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
         this.timer = new Timer.Timer();
 
         if (storage !== 0) {
-            this.timer.setTimePassed(storage);
+            this.timer.setElapsedTime(storage);
             this.timer.pause();
         }
 
         this._label = new St.Label({
-            text: Misc.formatTime(this.timer.timePassed),
+            text: Misc.formatTime(this.timer.elapsedTime),
             y_align: Clutter.ActorAlign.CENTER, style_class: 'paused'
         });
         this.add_child(this._label);
@@ -98,7 +98,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
                     GLib.PRIORITY_DEFAULT,      // priority of the source
                     1,                          // seconds to wait
                     () => {                     // the callback to invoke
-                        this.timer.update();
+                        this.timer.updateElapsedTime();
                         this._updateLabel();
 
                         return true;
@@ -115,12 +115,12 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
     // Updates the timer-label with the current time left.
     _updateLabel() {
-        this._label.set_text(Misc.formatTime(this.timer.timePassed));
+        this._label.set_text(Misc.formatTime(this.timer.elapsedTime));
     }
 
     destroy() {
         if (this.timeout) {
-            storage = this.timer.timePassed;
+            storage = this.timer.elapsedTime;
             GLib.source_remove(this.timeout);
             this.timeout = null;
         }
