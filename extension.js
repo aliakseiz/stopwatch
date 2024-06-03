@@ -26,7 +26,7 @@
 /**
  Debug with:
  dbus-run-session -- gnome-shell --nested --wayland
-*/
+ */
 
 import Clutter from 'gi://Clutter';
 import GObject from 'gi://GObject';
@@ -76,9 +76,9 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
                 // Ensure storage is updated to reflect the timer's stopped state.
                 storage = 0;
 
-						    if (this.timeout) {
-                  GLib.source_remove(this.timeout);
-                  this.timeout = null;
+                if (this.timeout) {
+                    GLib.source_remove(this.timeout);
+                    this.timeout = null;
                 }
 
                 break;
@@ -95,14 +95,17 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
                     }
 
                     this.timeout = GLib.timeout_add_seconds(
-                    GLib.PRIORITY_DEFAULT,      // priority of the source
-                    1,                          // seconds to wait
-                    () => {                     // the callback to invoke
-                        this.timer.updateElapsedTime();
-                        this._updateLabel();
+                        GLib.PRIORITY_DEFAULT,      // priority of the source
+                        1,                          // seconds to wait
+                        () => {                     // the callback to invoke
+                            if (!this._label || this._label._disposed) {
+                                return false; // Stop the timeout
+                            }
+                            this.timer.updateElapsedTime();
+                            this._updateLabel();
 
-                        return true;
-                    });
+                            return true;
+                        });
 
                     this._label.set_style_class_name('normal');
                 }
@@ -115,7 +118,9 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
     // Updates the timer-label with the current time left.
     _updateLabel() {
-        this._label.set_text(Misc.formatTime(this.timer.elapsedTime));
+        if (this._label && !this._label._disposed) {
+            this._label.set_text(Misc.formatTime(this.timer.elapsedTime));
+        }
     }
 
     destroy() {
@@ -124,6 +129,8 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
             GLib.source_remove(this.timeout);
             this.timeout = null;
         }
+        this._label.destroy();
+        this._label = null;
         super.destroy();
     }
 });
