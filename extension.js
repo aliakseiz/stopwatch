@@ -39,6 +39,7 @@ import * as Misc from './misc.js';
 import * as Timer from './timer.js';
 
 var storage = 0; // keep the timer state between screen locks
+var pausedAutomatically = false; // keep track of the timer state between the screen locks
 
 const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button {
     _init() {
@@ -57,6 +58,12 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
         });
         this.add_child(this._label);
 
+        if (pausedAutomatically) {
+            pausedAutomatically = false;
+
+            this._startResume();
+        }
+
         this.connect('event', this._onClick.bind(this));
     }
 
@@ -68,52 +75,64 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
         switch (event.get_button()) {
             case 3: // left
-                this.timer.stop();
-                this._updateLabel();
-
-                this._label.set_style_class_name('paused');
-
-                // Ensure storage is updated to reflect the timer's stopped state.
-                storage = 0;
-
-                if (this.timeout) {
-                    GLib.source_remove(this.timeout);
-                    this.timeout = null;
-                }
+                this._reset();
 
                 break;
             case 1: // right
                 if (this.timer.isRunning()) {
-                    this.timer.pause();
-
-                    this._label.set_style_class_name('paused');
+                    this._pause();
                 } else {
-                    if (this.timer.isPaused()) {
-                        this.timer.resume();
-                    } else { // stopped
-                        this.timer.start();
-                    }
-
-                    this.timeout = GLib.timeout_add_seconds(
-                        GLib.PRIORITY_DEFAULT,      // priority of the source
-                        1,                          // seconds to wait
-                        () => {                     // the callback to invoke
-                            if (!this._label || this._label._disposed) {
-                                return false; // Stop the timeout
-                            }
-                            this.timer.updateElapsedTime();
-                            this._updateLabel();
-
-                            return true;
-                        });
-
-                    this._label.set_style_class_name('normal');
+                    this._startResume();
                 }
 
                 break;
         }
 
         return Clutter.EVENT_PROPAGATE;
+    }
+
+    _startResume() {
+        if (this.timer.isPaused()) {
+            this.timer.resume();
+        } else { // stopped
+            this.timer.start();
+        }
+
+        this.timeout = GLib.timeout_add_seconds(
+            GLib.PRIORITY_DEFAULT,      // priority of the source
+            1,                          // seconds to wait
+            () => {                     // the callback to invoke
+                if (!this._label || this._label._disposed) {
+                    return false; // Stop the timeout
+                }
+                this.timer.updateElapsedTime();
+                this._updateLabel();
+
+                return true;
+            });
+
+        this._label.set_style_class_name('normal');
+    }
+
+    _pause() {
+        this.timer.pause();
+
+        this._label.set_style_class_name('paused');
+    }
+
+    _reset() {
+        this.timer.stop();
+        this._updateLabel();
+
+        this._label.set_style_class_name('paused');
+
+        // Ensure storage is updated to reflect the timer's stopped state.
+        storage = 0;
+
+        if (this.timeout) {
+            GLib.source_remove(this.timeout);
+            this.timeout = null;
+        }
     }
 
     // Updates the timer-label with the current time left.
@@ -124,6 +143,11 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
     }
 
     destroy() {
+        // If the timer was not paused manually, set the flag to later restart the timer
+        if (!this.timer.isPaused()) {
+            pausedAutomatically = true;
+        }
+
         if (this.timeout) {
             storage = this.timer.elapsedTime;
             GLib.source_remove(this.timeout);
