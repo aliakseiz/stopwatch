@@ -144,7 +144,7 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
 
     destroy() {
         // If the timer was not paused manually, set the flag to later restart the timer
-        if (!this.timer.isPaused()) {
+        if (this.timer.isRunning()) {
             pausedAutomatically = true;
         }
 

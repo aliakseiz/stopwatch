@@ -10,11 +10,11 @@ export class Timer {
     }
 
     isRunning() {
-        return this.state == TimerState.RUNNING;
+        return this.state === TimerState.RUNNING;
     }
 
     isPaused() {
-        return this.state == TimerState.PAUSED;
+        return this.state === TimerState.PAUSED;
     }
 
     start() {
