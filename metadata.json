@@ -10,5 +10,9 @@
     "49"
   ],
   "url": "https://github.com/aliakseiz/stopwatch",
-  "version": 13
+  "version": 14,
+  "donations": {
+    "kofi": "aliakseiz",
+    "paypal": "aliakseimiller"
+  }
 }
