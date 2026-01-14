@@ -68,27 +68,29 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
     }
 
     _onClick(actor, event) {
-        if (event.type() !== Clutter.EventType.BUTTON_RELEASE) {
-            // Some other non-clicky event happened; bail
-            return Clutter.EVENT_PROPAGATE;
-        }
+        let type = event.type()
 
-        switch (event.get_button()) {
-            case 3: // left
-                this._reset();
-
-                break;
-            case 1: // right
-                if (this.timer.isRunning()) {
-                    this._pause();
-                } else {
-                    this._startResume();
-                }
-
-                break;
+        // handle mouse click
+        if (event.type() === Clutter.EventType.BUTTON_RELEASE) {
+            switch (event.get_button()) {
+                case 3: // left
+                    this._reset();
+                    break;
+                case 1: // right
+                    this._toggleTimer();
+                    break;
+            }
+            // handle touch event as right click
+        } else if (type === Clutter.EventType.TOUCH_END) {
+            this._toggleTimer();
         }
 
         return Clutter.EVENT_PROPAGATE;
+    }
+
+    _toggleTimer() {
+        if (this.timer.isRunning()) this._pause();
+        else this._startResume();
     }
 
     _startResume() {
