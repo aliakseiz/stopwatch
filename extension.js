@@ -64,28 +64,30 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
             this._startResume();
         }
 
-        this.connect('event', this._onClick.bind(this));
+        this._setupInput();
     }
 
-    _onClick(actor, event) {
-        let type = event.type()
-
-        // handle mouse click
-        if (event.type() === Clutter.EventType.BUTTON_RELEASE) {
-            switch (event.get_button()) {
-                case 3: // left
-                    this._reset();
-                    break;
-                case 1: // right
-                    this._toggleTimer();
-                    break;
+    _setupInput() {
+        // handle mouse and touch click
+        this._clickGesture = new Clutter.ClickGesture();
+        this._clickGesture.connect('recognize', (action) => {
+            const button = action.get_button();
+            if (button === 3) { // Secondary
+                this._reset();
+            } else if (button === 1 || button === 0) { // Primary
+                this._toggleTimer();
             }
-            // handle touch event as right click
-        } else if (type === Clutter.EventType.TOUCH_END) {
-            this._toggleTimer();
-        }
+            return Clutter.EVENT_STOP;
+        });
+        this.add_action(this._clickGesture);
 
-        return Clutter.EVENT_PROPAGATE;
+        // handle long press (touch)
+        this._longPress = new Clutter.LongPressGesture();
+        this._longPress.connect('recognize', () => {
+            this._reset();
+            return Clutter.EVENT_STOP;
+        });
+        this.add_action(this._longPress);
     }
 
     _toggleTimer() {
@@ -155,6 +157,11 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
             GLib.source_remove(this.timeout);
             this.timeout = null;
         }
+
+        // Remove gestures
+        this.remove_action(this._clickGesture);
+        this.remove_action(this._longPress);
+
         this._label.destroy();
         this._label = null;
         super.destroy();
