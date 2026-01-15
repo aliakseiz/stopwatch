@@ -1,5 +1,5 @@
 {
-  "description": "Simple extension to measure time. Primary button click starts/pauses the watch, secondary button resets it. Automatically pauses/resumes on screen locking.",
+  "description": "Simple extension to measure time. Tap the primary button to start/pause the watch, secondary or long press to reset it. Automatically pauses/resumes on screen locking.",
   "name": "Stopwatch",
   "uuid": "stopwatch@aliakseiz.github.com",
   "shell-version": [
@@ -10,7 +10,7 @@
     "49"
   ],
   "url": "https://github.com/aliakseiz/stopwatch",
-  "version": 14,
+  "version": 15,
   "donations": {
     "kofi": "aliakseiz",
     "paypal": "aliakseimiller"

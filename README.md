@@ -2,9 +2,9 @@
 
 Simple stopwatch extension for Gnome 40-49.
 
-Click primary button to start/pause the watch, secondary to reset it.
+Tap the primary button to start/pause the watch, secondary or long press to reset it.
 
-Automatically pauses when the screen is locked and resumes on unlock.
+Automatically pauses when the screen is locked and resumes on unlocking.
 
 Preserves the state, if paused manually.
 
@@ -13,6 +13,10 @@ Preserves the state, if paused manually.
 # Install
 
 [Gnome shell extensions](https://extensions.gnome.org/extension/5796/stopwatch/)
+
+# Contributors
+
+- [kepler-69c](https://github.com/kepler-69c) added touch support ([PR](https://github.com/aliakseiz/stopwatch/pull/6))
 
 ---
 # License
