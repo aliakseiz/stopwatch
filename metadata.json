@@ -3,10 +3,11 @@
   "name": "Stopwatch",
   "uuid": "stopwatch@aliakseiz.github.com",
   "shell-version": [
-    "49"
+    "49",
+    "50"
   ],
   "url": "https://github.com/aliakseiz/stopwatch",
-  "version": 16,
+  "version": 17,
   "donations": {
     "kofi": "aliakseiz",
     "paypal": "aliakseimiller"

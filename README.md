@@ -1,6 +1,6 @@
 # Stopwatch
 
-Simple stopwatch extension for Gnome 40-49.
+Simple stopwatch extension for Gnome 40-50.
 
 Tap the primary button to start/pause the watch, secondary or long press to reset it.
 
