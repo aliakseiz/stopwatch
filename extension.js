@@ -68,24 +68,38 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
     }
 
     _setupInput() {
-        // handle mouse and touch click
+        // handle mouse click
+        this._capturedEventId = this.connect('captured-event', (_actor, action) => {
+            if (action.type() !== Clutter.EventType.BUTTON_PRESS) {
+                return Clutter.EVENT_PROPAGATE;
+            }
+
+            const button = action.get_button();
+            if (button === Clutter.BUTTON_SECONDARY) {
+                this._reset();
+                return Clutter.EVENT_STOP;
+            }
+            if (button === Clutter.BUTTON_PRIMARY) {
+                this._toggleTimer();
+                return Clutter.EVENT_STOP;
+            }
+
+            return Clutter.EVENT_PROPAGATE;
+        });
+
+        // handle touch tap
         this._clickGesture = new Clutter.ClickGesture();
         this._clickGesture.connect('recognize', (action) => {
-            const button = action.get_button();
-            if (button === 3) { // Secondary
-                this._reset();
-            } else if (button === 1 || button === 0) { // Primary
-                this._toggleTimer();
-            }
-            return Clutter.EVENT_STOP;
+            this._toggleTimer()
         });
         this.add_action(this._clickGesture);
 
         // handle long press (touch)
-        this._longPress = new Clutter.LongPressGesture();
+        this._longPress = new Clutter.LongPressGesture({
+            required_button: Clutter.BUTTON_PRIMARY,
+        });
         this._longPress.connect('recognize', () => {
             this._reset();
-            return Clutter.EVENT_STOP;
         });
         this.add_action(this._longPress);
     }
@@ -159,8 +173,14 @@ const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button
         }
 
         // Remove gestures
+        if (this._capturedEventId) {
+            this.disconnect(this._capturedEventId);
+            this._capturedEventId = null;
+        }
         this.remove_action(this._clickGesture);
+        this._clickGesture = null;
         this.remove_action(this._longPress);
+        this._longPress = null;
 
         this._label.destroy();
         this._label = null;
