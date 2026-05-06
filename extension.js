@@ -43,7 +43,7 @@ var pausedAutomatically = false; // keep track of the timer state between the sc
 
 const Indicator = GObject.registerClass(class Indicator extends PanelMenu.Button {
     _init() {
-        super._init(0.0, 'Toggle Button');
+        super._init(0.0, 'Toggle Button', true);
 
         this.timer = new Timer.Timer();
 
