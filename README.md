@@ -17,6 +17,7 @@ Preserves the state, if paused manually.
 # Contributors
 
 - [kepler-69c](https://github.com/kepler-69c) added touch support ([PR](https://github.com/aliakseiz/stopwatch/pull/6))
+- [kepler-69c](https://github.com/kepler-69c) suggested better event processing for Gnome 50
 
 ---
 # License
